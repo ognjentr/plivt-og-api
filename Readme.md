@@ -13,5 +13,5 @@ Ovde se nalazi projekat za predmeta Praktikum - Internet i veb tehnologije - Veb
 
 ## Kako se pokreće aplikacija
 
-1. Podigne se baza podataka i u SQL dump datoteke sa linka [02-resources/lybrary.sql](./02-resources/library.sql)
+1. Podigne se baza podataka i u SQL dump datoteke sa linka [02-resources/home_library.sql](./02-resources/home_library.sql)
 2. Pokrene se...
