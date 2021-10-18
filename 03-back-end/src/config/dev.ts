@@ -1,4 +1,4 @@
-import IConfig from './IConfig.interface';
+import IConfig from '../common/IConfig.interface';
 
 const Config: IConfig = {
 
@@ -14,6 +14,16 @@ const Config: IConfig = {
             maxAge: 3600000,
 
         },
+    },
+    database: {
+        host: "localhost",
+        port: 3306,
+        user: "root",
+        password: "root",
+        database: "home_library",
+        charset: "utf8",
+        timezone: "+01:00"
+
     },
 };
 
