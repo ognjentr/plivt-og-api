@@ -1,6 +1,9 @@
 import CategoryModel from "./model";
 import * as mysql2 from 'mysql2/promise';
 import IModelAdapterOptions from '../../common/IModelAdapterOptions.interface';
+import IErrorResponse from '../../common/IErrorResponse.interface';
+import { Resolver } from "dns";
+
 
 class CategoryService{
     
@@ -22,44 +25,74 @@ class CategoryService{
         item.parentCategoryId = row?.parent_category_id;
 
         if (options.loadParent && item.parentCategoryId !== null){
-            item.parentCategory = await this.getById(item.parentCategoryId);
+           const data = await this.getById(item.parentCategoryId);
+
+           if (data instanceof CategoryModel){
+            item.parentCategory = data ;
+           }
+           
+            
         }
 
         if(options.loadChildren){
-           item.subcategories  = await this.getAllByParentCategoryId(item.categoryId);
+            const data = this.getAllByParentCategoryId(item.categoryId);
+
+           if (Array.isArray(data)) {
+              
+            item.subcategories  = data;
+          
+        }
+
         }
         
         
         return item;
     }
 
-    public async getAll(): Promise<CategoryModel[]>{
-        const lista: CategoryModel[] = [];
+    public async getAll(): Promise<CategoryModel[]| IErrorResponse>{
+        return new Promise<CategoryModel[]|IErrorResponse>(async (resolve) =>{
+          const sql: string = "SELECT * FROM category WHERE parent_category_id is NULL;";
+             this.db.execute(sql)
+             .then(async result => {
+                 const rows = result[0];
+                const lista: CategoryModel[] = [];
 
-        const sql: string = "SELECT * FROM category WHERE parent_category_id is NULL;";
-        const [rows, colums] = await this.db.execute(sql);
-
-        if (Array.isArray(rows)){
-            for(const row of rows){
-                lista.push(
-                    await this.adaptModel(
-                        row,{
-    loadChildren: true, 
-    loadParent: false
-}
-                    )
-                )
-            }
-        }    
-
+                if (Array.isArray(rows)){
+                    for(const row of rows){
+                        lista.push(
+                            await this.adaptModel(
+                                row,{
+            loadChildren: true, 
+            loadParent: false
+        }
+                            )
+                        )
+                    }
+                }    
         
-        return lista;
+                
+                return lista;
+
+
+             })
+            .catch(error =>{
+                resolve({
+              errorCode: error?.errorno,
+              errorMessage: error?.sqlMessage
+                });
+
+            }) ;
+    
+            
+        });
+        
     }
 
-    public async getAllByParentCategoryId(parentCategoryId: number): Promise<CategoryModel[]>{
+    public async getAllByParentCategoryId(parentCategoryId: number): Promise<CategoryModel[]|IErrorResponse>{
+        try{
         const lista: CategoryModel[] = [];
 
-        const sql: string = "SELECT * FROM category WHERE parent_category_id =?;";
+        const sql: string = "SELECT * FROM category WHERE parent__category_id =?;";
         const [rows, colums] = await this.db.execute(sql,[parentCategoryId]);
 
         if (Array.isArray(rows)){
@@ -77,24 +110,58 @@ class CategoryService{
 
         
         return lista;
-    }
-
-    public async getById(categoryId: number): Promise<CategoryModel|null>{
-        const sql: string = "SELECT * FROM category WHERE category_id =?;";
-        const [rows, colums] = await this.db.execute(sql,[categoryId]);
-        if (!Array.isArray(rows)){
-            return null;
-        }
-        if (rows.length ===0){
-            return null;
-        } 
-        return await this.adaptModel(rows[0],{
-    loadParent: true,
-    loadChildren: true
-}
+    }catch (error) {
+        return {
+            errorCode: error?.errorno,
+            errorMessage: error?.sqlMessage
             
-            );
+        };
+
+    }
+}
+
+
+    public async getById(categoryId: number): Promise<CategoryModel|null|IErrorResponse>{
+        return new Promise<CategoryModel|null|IErrorResponse>(async resolve => {
+         
+            const sql: string = "SELECT * FROM category WHERE category_id =?;";
+          this.db.execute(sql, [categoryId])
+          
+           .then(async result => {
+            const [rows, colums] = result;
+           
+            if (!Array.isArray(rows)){
+                resolve (null);
+                return;
+            }
+            if (rows.length === 0){
+                resolve (null);
+            } 
+            resolve( await this.adaptModel(
+                rows[0],{
+        loadParent: true,
+        loadChildren: true
+    }
+                
+                ));
+        
+        })
+        .catch(error =>{
+            resolve({
+                errorCode: error?.errorno,
+                errorMessage: error?.sqlMessage
+                  });
+
+        });
+        
+        
+        
+            
+     })
+        
         
     }
 }
 export default CategoryService;
+
+
