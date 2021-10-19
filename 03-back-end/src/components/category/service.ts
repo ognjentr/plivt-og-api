@@ -3,6 +3,8 @@ import * as mysql2 from 'mysql2/promise';
 import IModelAdapterOptions from '../../common/IModelAdapterOptions.interface';
 import IErrorResponse from '../../common/IErrorResponse.interface';
 import { Resolver } from "dns";
+import { iAddCategory } from "./dto/AddCategory";
+import { error } from "console";
 
 
 class CategoryService{
@@ -94,6 +96,23 @@ class CategoryService{
      })
         
         
+    }
+    public async add(data: iAddCategory): Promise<CategoryModel|IErrorResponse>{
+        return new Promise<CategoryModel|IErrorResponse>(async resolve => {
+            const sql = 'INSERT category SET name = ?;';
+            this.db.execute(sql, [data.name])
+            .then(async result =>{
+                const insertinfo: any = result[0];
+                    const newCategoryId: number = +(insertinfo?.insertId)
+                    resolve(await this.getById(newCategoryId));
+            })
+            .catch(error => {
+                resolve({
+                    errorCode: error?.errorno,
+                    errorMessage: error?.sqlMessage
+                      });
+            })
+        });
     }
 }
 export default CategoryService;
