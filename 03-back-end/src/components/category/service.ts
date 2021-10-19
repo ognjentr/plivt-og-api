@@ -5,16 +5,12 @@ import IErrorResponse from '../../common/IErrorResponse.interface';
 import { Resolver } from "dns";
 import { iAddCategory } from "./dto/AddCategory";
 import { error } from "console";
+import BaseService from '../../services/BaseService';
 
 
-class CategoryService{
+class CategoryService extends BaseService<CategoryModel> {
     
-    private db: mysql2.Connection;
-
-    constructor(db: mysql2.Connection){
-        this.db = db;
-    }
-
+    
     protected async adaptModel (
         row: any,
         options: IModelAdapterOptions = {}
@@ -61,45 +57,17 @@ class CategoryService{
     }
     
     public async getById(categoryId: number): Promise<CategoryModel|null|IErrorResponse>{
-        return new Promise<CategoryModel|null|IErrorResponse>(async resolve => {
-         
-            const sql: string = "SELECT * FROM category WHERE category_id =?;";
-            this.db.execute(sql, [categoryId])
-          
-            .then(async result => {
-            const [rows, colums] = result;
-           
-            if (!Array.isArray(rows)){
-                resolve (null);
-                return;
-            }
-            if (rows.length === 0){
-                resolve (null);
-            } 
-            resolve( await this.adaptModel(
-                rows[0],{}
-                
-                ));
-        
-        })
-        .catch(error =>{
-            resolve({
-                errorCode: error?.errorno,
-                errorMessage: error?.sqlMessage
-                  });
-
-        });
-        
-        
-        
-            
-     })
+        return await this.getByIdFromTable("category", categoryId);
         
         
     }
     public async add(data: iAddCategory): Promise<CategoryModel|IErrorResponse>{
         return new Promise<CategoryModel|IErrorResponse>(async resolve => {
-            const sql = 'INSERT category SET name = ?;';
+            const sql = `
+            INSERT
+             category
+              SET
+               name = ?;`;
             this.db.execute(sql, [data.name])
             .then(async result =>{
                 const insertinfo: any = result[0];
