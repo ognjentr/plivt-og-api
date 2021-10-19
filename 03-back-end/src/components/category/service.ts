@@ -6,6 +6,7 @@ import { Resolver } from "dns";
 import { iAddCategory } from "./dto/AddCategory";
 import { error } from "console";
 import BaseService from '../../services/BaseService';
+import { iEditCategory } from "./dto/EditCategory";
 
 
 class CategoryService extends BaseService<CategoryModel> {
@@ -67,6 +68,38 @@ class CategoryService extends BaseService<CategoryModel> {
             INSERT
              category
               SET
+               name = ?
+               WHERE
+               category_id;`;
+            this.db.execute(sql, [data.name])
+            .then(async result =>{
+                const insertinfo: any = result[0];
+                    const newCategoryId: number = +(insertinfo?.insertId)
+                    resolve(await this.getById(newCategoryId));
+            })
+            .catch(error => {
+                resolve({
+                    errorCode: error?.errorno,
+                    errorMessage: error?.sqlMessage
+                      });
+            });
+        });
+    }
+    public async edit(categoryId: number, data: iEditCategory): Promise<CategoryModel|IErrorResponse|null>{
+        const result = await this.getById(categoryId);
+
+        if (result === null){
+         return null;   
+        }
+
+        if (!(result instanceof CategoryModel)) {
+          return result;
+        }
+        return new Promise<CategoryModel|IErrorResponse>(async resolve => {
+            const sql = `
+            INSERT
+             category
+              SET
                name = ?;`;
             this.db.execute(sql, [data.name])
             .then(async result =>{
@@ -79,7 +112,7 @@ class CategoryService extends BaseService<CategoryModel> {
                     errorCode: error?.errorno,
                     errorMessage: error?.sqlMessage
                       });
-            })
+            });
         });
     }
 }
