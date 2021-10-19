@@ -4,6 +4,7 @@ import CategoryModel from './model';
 import IErrorResponse from '../../common/IErrorResponse.interface';
 import { iAddCategory, IAddCategoryValidator } from './dto/AddCategory';
 import { error } from 'console';
+import { iEditCategory, IEditCategoryValidator } from './dto/EditCategory';
 
 
 class CategoryController{
@@ -55,6 +56,28 @@ class CategoryController{
         const result: CategoryModel|IErrorResponse = await this.categoryService.add(data as iAddCategory);
 
         res.send(result);
+    }
+    async edit(req: Request, res: Response, NextFunction){
+        const id: string = req.params.id; 
+
+         const categoryId: number = +id;
+         if (categoryId <= 0){
+            res.sendStatus(400).send("Invalid ID number");
+            return;
+         }
+        const data = req.body;
+        if(!IEditCategoryValidator(data)) {
+            res.status(400).send(IEditCategoryValidator.errors);
+            return;
+        }
+        const result: CategoryModel|IErrorResponse = await this.categoryService.edit(categoryId, data as iEditCategory);
+        if (result === null){
+            res.sendStatus(404);
+            return;
+        }
+        
+        res.send(result);
+
     }
 }
 
