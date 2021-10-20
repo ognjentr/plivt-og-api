@@ -29,16 +29,29 @@ class CategoryService extends BaseService<CategoryModel> {
         return item;
     }
 
-    public async getAll(): Promise<CategoryModel[]| IErrorResponse>{
+    public async getAll(
+        options: Partial<CategoryModelAdapterOptions> = {
+
+        }
+    ): Promise<CategoryModel[]| IErrorResponse>{
         return await this.getAllByFieldNameFromTable<CategoryModelAdapterOptions>(
             'category',
             'categoryId',
-            null);
+            null,
+            options
+            );
         
     }
     
-    public async getById(categoryId: number): Promise<CategoryModel|null|IErrorResponse>{
-        return await this.getByIdFromTable("category", categoryId);
+    public async getById(
+        categoryId: number,
+        options: Partial<CategoryModelAdapterOptions> = { },
+        ): Promise<CategoryModel|null|IErrorResponse>{
+        return await this.getByIdFromTable<CategoryModelAdapterOptions>(
+            "category",
+             categoryId,
+             options
+        );
         
         
     }
@@ -85,7 +98,7 @@ class CategoryService extends BaseService<CategoryModel> {
                 category_id;`;
             this.db.execute(sql, [data.name,categoryId])
             .then(async result =>{
-                resolve( await this.getById(categoryId));
+                resolve( await this.getById(categoryId, ));
             })
             .catch(error => {
                 resolve({
@@ -93,6 +106,42 @@ class CategoryService extends BaseService<CategoryModel> {
                     errorMessage: error?.sqlMessage
                       });
             });
+        });
+    }
+    public async delete (categoryId: number): Promise<IErrorResponse> {
+        return new Promise<IErrorResponse>(resolve => {
+            const sql = "DELETE FROM category WHERE category_id = ?;";
+            this.db.execute(sql,[categoryId])
+            .then(async result =>{
+                const deleteInfo : any = result[0];
+              const deleteRawCount: number = +(deleteInfo?.affectedRows);
+
+                    if(deleteRawCount === 1)  {
+                        resolve({
+                            errorCode: 0,
+                            errorMessage: "One Record deleted"
+                        });
+                    }else{
+                        resolve({
+                            errorCode: -1,
+                            errorMessage: "This record could not be deleted "
+                        });
+                    }
+
+            })
+            .catch(error => {
+                if(error?.errorno === 1673){
+                    resolve({
+                        errorCode: -2,
+                        errorMessage: "This category..."
+                    });
+                    return;
+                }
+                resolve({
+                    errorCode: error?.errorno,
+                    errorMessage: error?.sqlMessage
+                });
+            })
         });
     }
 }
