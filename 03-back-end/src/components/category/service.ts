@@ -1,4 +1,4 @@
-import CategoryModel from "./model";
+import CategoryModel from './model';
 import * as mysql2 from 'mysql2/promise';
 import IModelAdapterOptions from '../../common/IModelAdapterOptions.interface';
 import IErrorResponse from '../../common/IErrorResponse.interface';
@@ -8,6 +8,11 @@ import { error } from "console";
 import BaseService from '../../services/BaseService';
 import { iEditCategory } from "./dto/EditCategory";
 
+
+class CategoryModelAdapterOptions implements IModelAdapterOptions{
+
+
+}
 
 class CategoryService extends BaseService<CategoryModel> {
     
@@ -25,35 +30,10 @@ class CategoryService extends BaseService<CategoryModel> {
     }
 
     public async getAll(): Promise<CategoryModel[]| IErrorResponse>{
-        return new Promise<CategoryModel[]|IErrorResponse>(async (resolve) =>{
-            const sql: string = "SELECT * FROM category;";
-            this.db.execute(sql)
-            .then(async result => {
-                const rows = result[0];
-                const lista: CategoryModel[] = [];
-
-                if (Array.isArray(rows)){
-                    for(const row of rows){
-                        lista.push(
-                            await this.adaptModel(
-                                row,{}
-                            )
-                        )
-                    }
-                }    
-        
-                return lista;
-
-            })
-            .catch(error =>{
-                resolve({
-              errorCode: error?.errorno,
-              errorMessage: error?.sqlMessage
-                });
-
-            }) ;
-    
-        });
+        return await this.getAllByFieldNameFromTable<CategoryModelAdapterOptions>(
+            'category',
+            'categoryId',
+            null);
         
     }
     
@@ -99,13 +79,13 @@ class CategoryService extends BaseService<CategoryModel> {
             const sql = `
             INSERT
              category
-              SET
-               name = ?;`;
-            this.db.execute(sql, [data.name])
+            SET
+                name = ?,
+            WHERE
+                category_id;`;
+            this.db.execute(sql, [data.name,categoryId])
             .then(async result =>{
-                const insertinfo: any = result[0];
-                    const newCategoryId: number = +(insertinfo?.insertId)
-                    resolve(await this.getById(newCategoryId));
+                resolve( await this.getById(categoryId));
             })
             .catch(error => {
                 resolve({
