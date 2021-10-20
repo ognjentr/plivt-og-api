@@ -5,17 +5,15 @@ import IErrorResponse from '../../common/IErrorResponse.interface';
 import { iAddCategory, IAddCategoryValidator } from './dto/AddCategory';
 import { error } from 'console';
 import { iEditCategory, IEditCategoryValidator } from './dto/EditCategory';
+import BaseController from '../../common/BaseCoontroler';
 
 
-class CategoryController{
-      private categoryService: CategoryService;
-
-      constructor(categoryService: CategoryService) {
-          this.categoryService = categoryService;
-      }
+class CategoryController extends BaseController{
+    categoryService: any;
+      
 
       async getAll(req: Request, res: Response, next: NextFunction) {
-          const categories = await this.categoryService.getAll();
+          const categories = await this.services.categoryService.getAll();
 
           res.send(categories);
       } 

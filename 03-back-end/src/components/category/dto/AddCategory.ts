@@ -10,9 +10,9 @@ const IAddCategoryValidator = ajv.compile({
         type: "object",
         properties: {
             name: {
-            type: "string",
-            minlength:2,
-            maxlength:50,
+                type: "string",
+                minLength:2,
+                maxLength:50,
             },
          
          
