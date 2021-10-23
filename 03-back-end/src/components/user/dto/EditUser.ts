@@ -1,27 +1,31 @@
 import Ajv from "ajv";
 
-interface iAddCategory{
-    name: string;
+interface iEditUser{
+    username: string;
+    password: string
     
 }
 const ajv = new Ajv()
 
-const IAddCategoryValidator = ajv.compile({
+const IEditUserValidator = ajv.compile({
         type: "object",
         properties: {
-            name: {
+            username: {
                 type: "string",
                 minLength:2,
                 maxLength:50,
             },
+         
+         
+            
         },
         required: [
-            "name",
+            "username",
         ],
         additionalProperties: false,
 
 });
 
 
-export {iAddCategory};
-export{IAddCategoryValidator};
+export {iEditUser};
+export{IEditUserValidator};
