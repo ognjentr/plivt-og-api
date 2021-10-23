@@ -29,7 +29,7 @@ class BookService extends BaseService<BookModel> {
         
         item.category = null;
         return item;
-    }
+}
     
 
     public async getById(
