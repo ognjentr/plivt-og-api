@@ -1,4 +1,5 @@
 export default interface IConfig{
+    auth: any;
     server: {
         port: number,
         static: {
