@@ -7,6 +7,10 @@ import { config } from "process";
 import IApplicationResources from "./common/IApplicationResources.interface";
 import Router from "./router";
 import CategoryService from "./components/category/service";
+import PublisherService from "./components/publisher/service";
+import AuthorService from "./components/author/service";
+import LocationService from "./components/location/service";
+import UserService from "./components/user/service";
 
 async function main(){
     const application: express.Application = express();
@@ -34,6 +38,10 @@ async function main(){
 
      resources.services = {
          categoryService: new CategoryService(resources),
+         publisherService: new PublisherService(resources),
+         authorService: new AuthorService(resources),
+         locationService: new LocationService(resources),
+         userService: new UserService(resources),
      };
     
     application.use(

@@ -82,6 +82,18 @@ import Ajv from "ajv";
             },
             required: [
                 "name",
+                "title",
+                "titleOriginal",
+                "pages",
+                "language",
+                "isActive",
+                "categoryId",
+                "publisherId",
+                "frontSideImage",
+                "backSideImage",
+                "isbn",
+                "locationId",
+
             ],
             additionalProperties: false,
     
