@@ -11,6 +11,7 @@ import PublisherService from "./components/publisher/service";
 import AuthorService from "./components/author/service";
 import LocationService from "./components/location/service";
 import UserService from "./components/user/service";
+import BookService from "./components/book/service";
 
 async function main(){
     const application: express.Application = express();
@@ -37,11 +38,12 @@ async function main(){
      resources.databaseConnection.connect();
 
      resources.services = {
-         categoryService: new CategoryService(resources),
-         publisherService: new PublisherService(resources),
-         authorService: new AuthorService(resources),
-         locationService: new LocationService(resources),
-         userService: new UserService(resources),
+        bookService: new BookService(resources),
+        categoryService: new CategoryService(resources),
+        publisherService: new PublisherService(resources),
+        authorService: new AuthorService(resources),
+        locationService: new LocationService(resources),
+        userService: new UserService(resources),
      };
     
     application.use(

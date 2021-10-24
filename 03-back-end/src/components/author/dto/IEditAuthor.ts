@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 
-interface iEditAuthor{
+interface IEditAuthor{
     name: string;
     
 }
@@ -26,5 +26,5 @@ const IEditAuthorValidator = ajv.compile({
 });
 
 
-export {iEditAuthor};
+export {IEditAuthor};
 export{IEditAuthorValidator};

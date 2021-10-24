@@ -1,12 +1,12 @@
 import Ajv from "ajv";
 
-interface iEditCategory{
+interface IAddAuthor{
     name: string;
     
 }
 const ajv = new Ajv()
 
-const IEditCategoryValidator = ajv.compile({
+const IAddAuthorValidator = ajv.compile({
         type: "object",
         properties: {
             name: {
@@ -14,9 +14,6 @@ const IEditCategoryValidator = ajv.compile({
                 minLength:2,
                 maxLength:50,
             },
-         
-         
-            
         },
         required: [
             "name",
@@ -26,5 +23,5 @@ const IEditCategoryValidator = ajv.compile({
 });
 
 
-export {iEditCategory};
-export{IEditCategoryValidator};
+export {IAddAuthor};
+export{IAddAuthorValidator};

@@ -1,7 +1,7 @@
 import LocationService from './service';
 import LocationController from './controller';
 import IApplicationResources from '../../common/IApplicationResources.interface';
-import IRouter from "../../common/IRouter.intrface";
+import IRouter from "../../common/IRouter.interface";
 import * as express from 'express';
 
 

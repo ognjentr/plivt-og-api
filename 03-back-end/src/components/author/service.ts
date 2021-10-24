@@ -3,10 +3,10 @@ import * as mysql2 from 'mysql2/promise';
 import IModelAdapterOptions from '../../common/IModelAdapterOptions.interface';
 import IErrorResponse from '../../common/IErrorResponse.interface';
 import { Resolver } from "dns";
-import { iAddAuthor } from "./dto/AddAuthor";
+import { IAddAuthor } from "./dto/IAddAuthor";
 import { error } from "console";
 import BaseService from '../../services/BaseService';
-import { iEditAuthor } from "./dto/EditAuthor";
+import { IEditAuthor } from "./dto/IEditAuthor";
 
 
 class AuthorModelAdapterOptions implements IModelAdapterOptions{
@@ -55,11 +55,11 @@ class AuthorService extends BaseService<AuthorModel> {
         
         
     }
-    public async add(data: iAddAuthor): Promise<AuthorModel|IErrorResponse>{
+    public async add(data: IAddAuthor): Promise<AuthorModel|IErrorResponse>{
         return new Promise<AuthorModel|IErrorResponse>(async resolve => {
             const sql = `
             INSERT
-             category
+             author
               SET
                name = ?`;
                
@@ -77,7 +77,7 @@ class AuthorService extends BaseService<AuthorModel> {
             });
         });
     }
-    public async edit(authorId: number, data: iEditAuthor): Promise<AuthorModel|IErrorResponse|null>{
+    public async edit(authorId: number, data: IEditAuthor): Promise<AuthorModel|IErrorResponse|null>{
         const result = await this.getById(authorId);
 
         if (result === null){
@@ -90,11 +90,11 @@ class AuthorService extends BaseService<AuthorModel> {
         return new Promise<AuthorModel|IErrorResponse>(async resolve => {
             const sql = `
             INSERT
-             category
+             author
             SET
                 name = ?,
             WHERE
-                category_id;`;
+                author_id;`;
             this.db.execute(sql, [data.name,authorId])
             .then(async result =>{
                 resolve( await this.getById(authorId, ));
@@ -109,7 +109,7 @@ class AuthorService extends BaseService<AuthorModel> {
     }
     public async delete (authorId: number): Promise<IErrorResponse> {
         return new Promise<IErrorResponse>(resolve => {
-            const sql = "DELETE FROM category WHERE category_id = ?;";
+            const sql = "DELETE FROM author WHERE author_id = ?;";
             this.db.execute(sql,[authorId])
             .then(async result =>{
                 const deleteInfo : any = result[0];

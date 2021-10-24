@@ -2,10 +2,10 @@ import CategoryService from './service';
 import {Request, Response, NextFunction} from "express"
 import CategoryModel from './model';
 import IErrorResponse from '../../common/IErrorResponse.interface';
-import { iAddCategory, IAddCategoryValidator } from './dto/AddCategory';
+import { IAddCategory, IAddCategoryValidator } from './dto/IAddCategory';
 import { error } from 'console';
-import { iEditCategory, IEditCategoryValidator } from './dto/EditCategory';
-import BaseController from '../../common/BaseCoontroler';
+import { IEditCategory, IEditCategoryValidator } from './dto/IEditCategory';
+import BaseController from '../../common/BaseController';
 
 
 class CategoryController extends BaseController{
@@ -51,7 +51,7 @@ class CategoryController extends BaseController{
             return;
         }
 
-        const result: CategoryModel|IErrorResponse = await this.categoryService.add(data as iAddCategory);
+        const result: CategoryModel|IErrorResponse = await this.categoryService.add(data as IAddCategory);
 
         res.send(result);
     }
@@ -68,7 +68,7 @@ class CategoryController extends BaseController{
             res.status(400).send(IEditCategoryValidator.errors);
             return;
         }
-        const result: CategoryModel|IErrorResponse = await this.categoryService.edit(categoryId, data as iEditCategory);
+        const result: CategoryModel|IErrorResponse = await this.categoryService.edit(categoryId, data as IEditCategory);
         if (result === null){
             res.sendStatus(404);
             return;

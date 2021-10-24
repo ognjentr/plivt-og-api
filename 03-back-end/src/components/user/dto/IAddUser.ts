@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 
-interface iAddUser{
+interface IAddUser{
     username: string;
     password: string;
     
@@ -30,5 +30,5 @@ const IAddUserValidator = ajv.compile({
 });
 
 
-export {iAddUser};
+export {IAddUser};
 export{IAddUserValidator};

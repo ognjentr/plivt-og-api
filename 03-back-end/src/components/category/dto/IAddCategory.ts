@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 
-interface iAddCategory{
+interface IAddCategory{
     name: string;
     
 }
@@ -23,5 +23,5 @@ const IAddCategoryValidator = ajv.compile({
 });
 
 
-export {iAddCategory};
+export {IAddCategory};
 export{IAddCategoryValidator};

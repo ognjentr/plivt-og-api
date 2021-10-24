@@ -3,10 +3,10 @@ import * as mysql2 from 'mysql2/promise';
 import IModelAdapterOptions from '../../common/IModelAdapterOptions.interface';
 import IErrorResponse from '../../common/IErrorResponse.interface';
 import { Resolver } from "dns";
-import { iAddLocation } from "./dto/AddLocation";
+import { IAddLocation } from "./dto/IAddLocation";
 import { error } from "console";
 import BaseService from '../../services/BaseService';
-import { iEditLocation } from "./dto/EditLocation";
+import { IEditLocation } from "./dto/IEditLocation";
 
 
 class LocationModelAdapterOptions implements IModelAdapterOptions{
@@ -56,7 +56,7 @@ class LocationService extends BaseService<LocationModel> {
         
         
     }
-    public async add(data: iAddLocation): Promise<LocationModel|IErrorResponse>{
+    public async add(data: IAddLocation): Promise<LocationModel|IErrorResponse>{
         return new Promise<LocationModel|IErrorResponse>(async resolve => {
             const sql = `
             INSERT
@@ -78,7 +78,7 @@ class LocationService extends BaseService<LocationModel> {
             });
         });
     }
-    public async edit(locationId: number, data: iEditLocation): Promise<LocationModel|IErrorResponse|null>{
+    public async edit(locationId: number, data: IEditLocation): Promise<LocationModel|IErrorResponse|null>{
         const result = await this.getById(locationId);
 
         if (result === null){
@@ -110,7 +110,7 @@ class LocationService extends BaseService<LocationModel> {
     }
     public async delete (locationId: number): Promise<IErrorResponse> {
         return new Promise<IErrorResponse>(resolve => {
-            const sql = "DELETE FROM category WHERE category_id = ?;";
+            const sql = "DELETE FROM location WHERE location_id = ?;";
             this.db.execute(sql,[locationId])
             .then(async result =>{
                 const deleteInfo : any = result[0];

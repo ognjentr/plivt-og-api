@@ -2,10 +2,10 @@ import PublisherService from './service';
 import {Request, Response, NextFunction} from "express"
 import PublisherModel from './model';
 import IErrorResponse from '../../common/IErrorResponse.interface';
-import { iAddPublisher, IAddPublisherValidator } from './dto/AddCategory';
+import { IAddPublisher, IAddPublisherValidator } from './dto/IAddPublisher';
 import { error } from 'console';
-import { iEditPublisher, IEditPublisherValidator } from './dto/iEditPublisher';
-import BaseController from '../../common/BaseCoontroler';
+import { IEditPublisher, IEditPublisherValidator } from './dto/IEditPublisher';
+import BaseController from '../../common/BaseController';
 
 
 class PublisherController extends BaseController{
@@ -51,7 +51,7 @@ class PublisherController extends BaseController{
             return;
         }
 
-        const result: PublisherModel|IErrorResponse = await this.publisherService.add(data as iAddPublisher);
+        const result: PublisherModel|IErrorResponse = await this.publisherService.add(data as IAddPublisher);
 
         res.send(result);
     }
@@ -68,7 +68,7 @@ class PublisherController extends BaseController{
             res.status(400).send(IEditPublisherValidator.errors);
             return;
         }
-        const result: PublisherModel|IErrorResponse = await this.publisherService.edit(publisherId, data as iEditPublisher);
+        const result: PublisherModel|IErrorResponse = await this.publisherService.edit(publisherId, data as IEditPublisher);
         if (result === null){
             res.sendStatus(404);
             return;

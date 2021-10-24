@@ -2,10 +2,10 @@ import AuthorService from './service';
 import {Request, Response, NextFunction} from "express"
 import AuthorModel from './model';
 import IErrorResponse from '../../common/IErrorResponse.interface';
-import { iAddAuthor, IAddCategoryValidator } from './dto/AddAuthor';
+import { IAddAuthor, IAddAuthorValidator } from './dto/IAddAuthor';
 import { error } from 'console';
-import { iEditCategory, IEditCategoryValidator } from './dto/EditAuthor';
-import BaseController from '../../common/BaseCoontroler';
+import { IEditAuthor, IEditAuthorValidator } from './dto/IEditAuthor';
+import BaseController from '../../common/BaseController';
 
 
 class AuthorController extends BaseController{
@@ -51,7 +51,7 @@ class AuthorController extends BaseController{
             return;
         }
 
-        const result: AuthorModel|IErrorResponse = await this.authorService.add(data as iAddAuthor);
+        const result: AuthorModel|IErrorResponse = await this.authorService.add(data as IAddAuthor);
 
         res.send(result);
     }
@@ -68,7 +68,7 @@ class AuthorController extends BaseController{
             res.status(400).send(IEditAuthorValidator.errors);
             return;
         }
-        const result: AuthorModel|IErrorResponse = await this.authorService.edit(authorId, data as iEditAuthor);
+        const result: AuthorModel|IErrorResponse = await this.authorService.edit(authorId, data as IEditAuthor);
         if (result === null){
             res.sendStatus(404);
             return;

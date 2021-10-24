@@ -2,14 +2,13 @@ import UserService from './service';
 import {Request, Response, NextFunction} from "express"
 import UserModel from './model';
 import IErrorResponse from '../../common/IErrorResponse.interface';
-import { iAddUser, IAddUserValidator } from './dto/AddUser';
+import { IAddUser, IAddUserValidator } from './dto/IAddUser';
 import { error } from 'console';
-import { iEditUser, IEditUserValidator } from './dto/EditUser';
-import BaseController from '../../common/BaseCoontroler';
+import { IEditUser, IEditUserValidator } from './dto/IEditUser';
+import BaseController from '../../common/BaseController';
 
 
 class UserController extends BaseController{
-    categoryService: any;
     userService: any;
       
 
@@ -52,7 +51,7 @@ class UserController extends BaseController{
             return;
         }
 
-        const result: UserModel|IErrorResponse = await this.userService.add(data as iAddUser);
+        const result: UserModel|IErrorResponse = await this.userService.add(data as IAddUser);
 
         res.send(result);
     }
@@ -69,7 +68,7 @@ class UserController extends BaseController{
             res.status(400).send(IEditUserValidator.errors);
             return;
         }
-        const result: UserModel|IErrorResponse = await this.userService.edit(userId, data as iEditUser);
+        const result: UserModel|IErrorResponse = await this.userService.edit(userId, data as IEditUser);
         if (result === null){
             res.sendStatus(404);
             return;

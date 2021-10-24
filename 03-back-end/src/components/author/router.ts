@@ -2,7 +2,7 @@ import * as express from "express";
 import AuthorService from './service';
 import AuthorController from './controller';
 import IApplicationResources from '../../common/IApplicationResources.interface';
-import IRouter from "../../common/IRouter.intrface";
+import IRouter from "../../common/IRouter.interface";
 
 export default class AuthorRouter implements IRouter{
     public setupRoutes(application: express.Application, resources: IApplicationResources){

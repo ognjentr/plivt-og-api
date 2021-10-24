@@ -3,10 +3,10 @@ import * as mysql2 from 'mysql2/promise';
 import IModelAdapterOptions from '../../common/IModelAdapterOptions.interface';
 import IErrorResponse from '../../common/IErrorResponse.interface';
 import { Resolver } from "dns";
-import { iAddPublisher } from "./dto/AddPublisher";
+import { IAddPublisher } from "./dto/IAddPublisher";
 import { error } from "console";
 import BaseService from '../../services/BaseService';
-import { iEditPublisher } from "./dto/EditPublisher";
+import { IEditPublisher } from "./dto/IEditPublisher";
 
 
 class PublisherModelAdapterOptions implements IModelAdapterOptions{
@@ -48,18 +48,18 @@ class PublisherService extends BaseService<PublisherModel> {
         options: Partial<PublisherModelAdapterOptions> = { },
         ): Promise<PublisherModel|null|IErrorResponse>{
         return await this.getByIdFromTable<PublisherModelAdapterOptions>(
-            "category",
+            "publisher",
              publisherId,
              options
         );
         
         
     }
-    public async add(data: iAddPublisher): Promise<PublisherModel|IErrorResponse>{
+    public async add(data: IAddPublisher): Promise<PublisherModel|IErrorResponse>{
         return new Promise<PublisherModel|IErrorResponse>(async resolve => {
             const sql = `
             INSERT
-             category
+             publisher
               SET
                name = ?`;
             this.db.execute(sql, [data.name])
@@ -76,7 +76,7 @@ class PublisherService extends BaseService<PublisherModel> {
             });
         });
     }
-    public async edit(publisherId: number, data: iEditPublisher): Promise<PublisherModel|IErrorResponse|null>{
+    public async edit(publisherId: number, data: IEditPublisher): Promise<PublisherModel|IErrorResponse|null>{
         const result = await this.getById(publisherId);
 
         if (result === null){
@@ -89,7 +89,7 @@ class PublisherService extends BaseService<PublisherModel> {
         return new Promise<PublisherModel|IErrorResponse>(async resolve => {
             const sql = `
             INSERT
-             category
+             publisher
             SET
                 name = ?;`;
             this.db.execute(sql, [data.name,publisherId])
@@ -106,7 +106,7 @@ class PublisherService extends BaseService<PublisherModel> {
     }
     public async delete (publisherId: number): Promise<IErrorResponse> {
         return new Promise<IErrorResponse>(resolve => {
-            const sql = "DELETE FROM category WHERE category_id = ?;";
+            const sql = "DELETE FROM publisher WHERE publisher_id = ?;";
             this.db.execute(sql,[publisherId])
             .then(async result =>{
                 const deleteInfo : any = result[0];

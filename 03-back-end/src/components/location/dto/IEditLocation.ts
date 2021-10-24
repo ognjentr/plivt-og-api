@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 
-interface iEditLocation{
+interface IEditLocation{
     room: number;
     shelf: number;
     
@@ -33,5 +33,5 @@ const IEditLocationValidator = ajv.compile({
 );
 
 
-export {iEditLocation};
+export {IEditLocation};
 export{IEditLocationValidator};

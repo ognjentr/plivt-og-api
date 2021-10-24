@@ -3,10 +3,10 @@ import * as mysql2 from 'mysql2/promise';
 import IModelAdapterOptions from '../../common/IModelAdapterOptions.interface';
 import IErrorResponse from '../../common/IErrorResponse.interface';
 import { Resolver } from "dns";
-import { iAddUser } from "./dto/AddUser";
+import { IAddUser } from "./dto/IAddUser";
 import { error } from "console";
 import BaseService from '../../services/BaseService';
-import { iEditUser } from "./dto/EditUser";
+import { IEditUser } from "./dto/IEditUser";
 
 
 class UserModelAdapterOptions implements IModelAdapterOptions{
@@ -55,7 +55,7 @@ class UserService extends BaseService<UserModel> {
         
         
     }
-    public async add(data: iAddUser): Promise<UserModel|IErrorResponse>{
+    public async add(data: IAddUser): Promise<UserModel|IErrorResponse>{
         return new Promise<UserModel|IErrorResponse>(async resolve => {
             const sql = `
             INSERT
@@ -77,7 +77,7 @@ class UserService extends BaseService<UserModel> {
             });
         });
     }
-    public async edit(userId: number, data: iEditUser): Promise<UserModel|IErrorResponse|null>{
+    public async edit(userId: number, data: IEditUser): Promise<UserModel|IErrorResponse|null>{
         const result = await this.getById(userId);
 
         if (result === null){

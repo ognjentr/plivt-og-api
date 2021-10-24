@@ -1,27 +1,31 @@
 import Ajv from "ajv";
 
-interface iAddAuthor{
-    name: string;
+interface IEditUser{
+    username: string;
+    password: string
     
 }
 const ajv = new Ajv()
 
-const IAddAuthorValidator = ajv.compile({
+const IEditUserValidator = ajv.compile({
         type: "object",
         properties: {
-            name: {
+            username: {
                 type: "string",
                 minLength:2,
                 maxLength:50,
             },
+         
+         
+            
         },
         required: [
-            "name",
+            "username",
         ],
         additionalProperties: false,
 
 });
 
 
-export {iAddAuthor};
-export{IAddAuthorValidator};
+export {IEditUser};
+export{IEditUserValidator};

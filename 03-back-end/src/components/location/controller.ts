@@ -2,10 +2,10 @@ import LocationService from './service';
 import {Request, Response, NextFunction} from "express"
 import LocationModel from './model';
 import IErrorResponse from '../../common/IErrorResponse.interface';
-import { iAddLocation, IAddLocationValidator } from './dto/AddLocation';
+import { IAddLocation, IAddLocationValidator } from './dto/IAddLocation';
 import { error } from 'console';
-import { iEditLocation, IEditLocationValidator } from './dto/EditLocation';
-import BaseController from '../../common/BaseCoontroler';
+import { IEditLocation, IEditLocationValidator } from './dto/IEditLocation';
+import BaseController from '../../common/BaseController';
 
 
 class LocationController extends BaseController{
@@ -51,7 +51,7 @@ class LocationController extends BaseController{
             return;
         }
 
-        const result: LocationModel|IErrorResponse = await this.locationService.add(data as iAddLocation);
+        const result: LocationModel|IErrorResponse = await this.locationService.add(data as IAddLocation);
 
         res.send(result);
     }
@@ -68,7 +68,7 @@ class LocationController extends BaseController{
             res.status(400).send(IEditLocationValidator.errors);
             return;
         }
-        const result: LocationModel|IErrorResponse = await this.locationService.edit(locationId, data as iEditLocation);
+        const result: LocationModel|IErrorResponse = await this.locationService.edit(locationId, data as IEditLocation);
         if (result === null){
             res.sendStatus(404);
             return;

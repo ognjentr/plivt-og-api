@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 
-interface iAddPublisher{
+interface IAddPublisher{
     name: string;
     city: string;
     country: string;
@@ -44,5 +44,5 @@ const IAddPublisherValidator = ajv.compile({
 });
 
 
-export {iAddPublisher};
+export {IAddPublisher};
 export{IAddPublisherValidator};
