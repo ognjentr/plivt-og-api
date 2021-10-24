@@ -8,15 +8,10 @@ import { error } from "console";
 import BaseService from '../../services/BaseService';
 import { IEditUser } from "./dto/IEditUser";
 
-
 class UserModelAdapterOptions implements IModelAdapterOptions{
-
-
 }
 
-class UserService extends BaseService<UserModel> {
-    
-    
+class UserService extends BaseService<UserModel> {    
     protected async adaptModel (
         row: any,
         options: IModelAdapterOptions = {}
@@ -31,7 +26,6 @@ class UserService extends BaseService<UserModel> {
 
     public async getAll(
         options: Partial<UserModelAdapterOptions> = {
-
         }
     ): Promise<UserModel[]| IErrorResponse>{
         return await this.getAllByFieldNameFromTable<UserModelAdapterOptions>(
@@ -39,8 +33,7 @@ class UserService extends BaseService<UserModel> {
             'userId',
             null,
             options
-            );
-        
+            );        
     }
     
     public async getById(
@@ -51,10 +44,9 @@ class UserService extends BaseService<UserModel> {
             "user",
              userId,
              options
-        );
-        
-        
+        );      
     }
+
     public async add(data: IAddUser): Promise<UserModel|IErrorResponse>{
         return new Promise<UserModel|IErrorResponse>(async resolve => {
             const sql = `
@@ -77,20 +69,22 @@ class UserService extends BaseService<UserModel> {
             });
         });
     }
+
     public async edit(userId: number, data: IEditUser): Promise<UserModel|IErrorResponse|null>{
         const result = await this.getById(userId);
 
         if (result === null){
-         return null;   
+            return null;   
         }
 
         if (!(result instanceof UserModel)) {
-          return result;
+            return result;
         }
+
         return new Promise<UserModel|IErrorResponse>(async resolve => {
             const sql = `
             INSERT
-             user
+                user
             SET
                 username = ?,
             WHERE
@@ -107,26 +101,26 @@ class UserService extends BaseService<UserModel> {
             });
         });
     }
+
     public async delete (userId: number): Promise<IErrorResponse> {
         return new Promise<IErrorResponse>(resolve => {
             const sql = "DELETE FROM user WHERE user_id = ?;";
             this.db.execute(sql,[userId])
             .then(async result =>{
                 const deleteInfo : any = result[0];
-              const deleteRawCount: number = +(deleteInfo?.affectedRows);
+                const deleteRawCount: number = +(deleteInfo?.affectedRows);
 
-                    if(deleteRawCount === 1)  {
-                        resolve({
-                            errorCode: 0,
-                            errorMessage: "One Record deleted"
-                        });
-                    }else{
-                        resolve({
-                            errorCode: -1,
-                            errorMessage: "This record could not be deleted "
-                        });
-                    }
-
+                if(deleteRawCount === 1)  {
+                    resolve({
+                        errorCode: 0,
+                        errorMessage: "One Record deleted"
+                    });
+                }else{
+                    resolve({
+                        errorCode: -1,
+                        errorMessage: "This record could not be deleted "
+                    });
+                }
             })
             .catch(error => {
                 if(error?.errorno === 1673){
@@ -143,7 +137,18 @@ class UserService extends BaseService<UserModel> {
             })
         });
     }
+
+    public async getByUsername(username: string): Promise<UserModel|null> {
+        const users = await this.getAllByFieldNameFromTable("user", "username", username, {});
+
+        if (!Array.isArray(users) || users.length === 0) {
+            return null;
+        }
+
+        return users[0];
+    }
 }
+
 export default UserService;
 
 
