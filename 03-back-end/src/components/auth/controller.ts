@@ -1,11 +1,11 @@
 import BaseController from '../../common/BaseController';
 import { Request, Response } from "express";
 import { IUserLogin, IUserLoginValidator } from './dto/IUserLogin';
-import * as bcrypt from "bcrypt";
 import ITokenData from './dto/ITokenData.interface';
 import * as jwt from "jsonwebtoken";
 import Config from '../../config/dev';
 import { IRefreshToken, IRefreshTokenValidator } from './dto/IRefreshToken';
+import * as bcrypt from 'bcrypt';
 
 export default class AuthController extends BaseController {
     public async userLogin(req: Request, res: Response) {
