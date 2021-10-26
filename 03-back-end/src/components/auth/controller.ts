@@ -19,7 +19,7 @@ export default class AuthController extends BaseController {
         if (user === null) return res.sendStatus(404);        
 
         if (!bcrypt.compareSync(data.password, user.passwordHash)) {
-            // Anti-brute-force mera: sacekati 1s pre slanja odgovora da lozinka nije dobra
+            
             await new Promise(resolve => setTimeout(resolve, 1000));
             return res.status(403).send("Invalid user password.");
         }
